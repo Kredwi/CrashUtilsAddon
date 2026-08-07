@@ -26,6 +26,10 @@ dependencies {
 
     // Meteor
     implementation(libs.meteor.client)
+
+    implementation(libs.meteor.orbit)
+
+    implementation(libs.fabric.api)
 }
 
 java {
@@ -49,6 +53,7 @@ tasks {
             "version" to project.version,
             "minecraft_version" to toMinecraftCompat(libs.versions.minecraft.get()),
             "jdk_version" to libs.versions.jdk.get(),
+            "fabric_api_version" to libs.versions.fabric.api.get(),
         )
 
         inputs.properties(propertyMap)

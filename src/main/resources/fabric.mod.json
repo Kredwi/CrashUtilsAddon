@@ -1,24 +1,28 @@
 {
   "schemaVersion": 1,
-  "id": "addon-template",
+  "id": "crash-utils",
   "version": "${version}",
-  "name": "Addon Template",
-  "description": "An addon template for Meteor Client addons.",
+  "name": "Crash Utils",
+  "description": "Add simple crash exploits and utils",
+  "license": "Apache-2.0",
   "authors": [
-    "seasnail"
+    "Kredwi"
   ],
   "contact": {
-    "sources": "https://github.com/MeteorDevelopment/meteor-addon-template"
+    "sources": "https://github.com/Kredwi/CrashUtilsAddon",
+    "issues": "https://github.com/Kredwi/CrashUtilsAddon/issues",
+    "homepage": "https://kredwi.ru",
+    "email": "kredwicraft@gmail.com"
   },
-  "icon": "assets/template/icon.png",
+  "icon": "assets/crashutils/icon.png",
   "environment": "client",
   "entrypoints": {
     "meteor": [
-      "com.example.addon.AddonTemplate"
+      "ru.kredwi.crashutils.CrashUtils"
     ]
   },
   "mixins": [
-    "addon-template.mixins.json"
+    "crash-utils.mixins.json"
   ],
   "custom": {
     "meteor-client:color": "225,25,25",
@@ -31,6 +35,7 @@
   "depends": {
     "java": ">=${jdk_version}",
     "minecraft": "${minecraft_version}",
+    "fabric-api": ">=${fabric_api_version}",
     "meteor-client": "*"
   }
 }
