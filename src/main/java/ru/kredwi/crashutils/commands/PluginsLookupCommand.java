@@ -1,6 +1,8 @@
 package ru.kredwi.crashutils.commands;
 
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.mojang.brigadier.tree.ArgumentCommandNode;
+import com.mojang.brigadier.tree.LiteralCommandNode;
 import joptsimple.internal.Strings;
 import meteordevelopment.meteorclient.commands.Command;
 import meteordevelopment.meteorclient.utils.player.ChatUtils;
@@ -19,7 +21,7 @@ import java.util.function.Predicate;
 
 public class PluginsLookupCommand extends Command {
     public static final Set<String> PLUGIN_BLACKLIST = Set.of(
-        "bukkit", "minecraft", "spigot", "paper", "purpur"
+        "bukkit", "minecraft", "spigot", "paper", "purpur", "fabric-command-api-v2"
     );
 
     public static final Random random = new Random();
@@ -62,11 +64,51 @@ public class PluginsLookupCommand extends Command {
                 return SINGLE_SUCCESS;
             }
 
-            REQUEST_ID.set(random.nextInt(0, Integer.MAX_VALUE));
-            mc.getConnection()
-                .send(new ServerboundCommandSuggestionPacket(REQUEST_ID.get(), "/"));
-            info("Suggestion packet send");
+            if (!onGetCommandFromConnection())
+                sendPacket();
+            else
+                info("If plugins is 0, attempting write §apluginslookup packet");
+
             return SINGLE_SUCCESS;
         });
+
+        builder.then(literal("packet")
+            .executes((_) -> {
+                if (mc.getConnection() == null) {
+                    error("You cannot be playing in the minecraft server");
+                    return SINGLE_SUCCESS;
+                }
+                sendPacket();
+                return SINGLE_SUCCESS;
+            }));
+    }
+
+    private void sendPacket() {
+        REQUEST_ID.set(random.nextInt(0, 20));
+        mc.getConnection()
+            .send(new ServerboundCommandSuggestionPacket(REQUEST_ID.get(), ""));
+        info("Suggestion packet send");
+    }
+
+    private boolean onGetCommandFromConnection() {
+        var commands = mc.getConnection().getCommands().getRoot().getChildren().stream()
+            .map(node -> {
+                String name = Strings.EMPTY;
+                if (node instanceof LiteralCommandNode<ClientSuggestionProvider> e)
+                    name = e.getLiteral();
+                if (node instanceof ArgumentCommandNode<?, ?> e)
+                    name = e.getName();
+                return name;
+            })
+            .filter(e -> !e.equalsIgnoreCase(Strings.EMPTY))
+            .filter(Predicate.not(PLUGIN_BLACKLIST::contains))
+            .toList();
+
+        if (commands.isEmpty())
+            return false;
+        else {
+            HANDLE_COMMANDS_SUGGESTION.accept(commands);
+            return true;
+        }
     }
 }
