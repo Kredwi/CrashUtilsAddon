@@ -14,6 +14,7 @@ import ru.kredwi.crashutils.modules.PasswordBruteforce;
 import ru.kredwi.crashutils.modules.PlaceholdersSpam;
 import ru.kredwi.crashutils.modules.exploit.*;
 import ru.kredwi.crashutils.modules.exploit.plugins.AuthmeVelocityExploit;
+import ru.kredwi.crashutils.modules.exploit.plugins.GrimACExploit;
 import ru.kredwi.crashutils.modules.exploit.plugins.LPXExploit;
 import ru.kredwi.crashutils.modules.exploit.plugins.TradeSystemExploit;
 import ru.kredwi.crashutils.modules.exploit.plugins.commands.*;
@@ -59,6 +60,9 @@ public class CrashUtils extends MeteorAddon {
         Modules.get().add(new AuthmeVelocityExploit());
         Modules.get().add(new LPXExploit());
         Modules.get().add(new FAWEExploit());
+
+        Modules.get().add(new GrimACExploit());
+        Modules.get().add(new ASCIExploit());
     }
 
     private void registerCommands() {

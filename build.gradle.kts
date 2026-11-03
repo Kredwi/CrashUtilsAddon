@@ -1,10 +1,13 @@
+import org.gradle.internal.declarativedsl.intrinsics.listOf
+import org.gradle.internal.declarativedsl.intrinsics.mapOf
+
 plugins {
     alias(libs.plugins.fabric.loom)
 }
 
 base {
     archivesName = properties["archives_base_name"] as String
-    version = libs.versions.mod.version.get()
+    version = libs.versions.mod.version.get() + "-" + libs.minecraft
     group = properties["maven_group"] as String
 }
 

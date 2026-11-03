@@ -4,7 +4,7 @@ A meteor client addon
 
 ![Java](https://img.shields.io/badge/Java-25+-orange?style=flat-square&logo=openjdk)
 ![Fabric](https://img.shields.io/badge/Platform-Fabric-blue?style=flat-square&logo=fabric)
-![Minecraft](https://img.shields.io/badge/Minecraft-26.1.2-brightgreen?style=flat-square&logo=minetest)
+![Minecraft](https://img.shields.io/badge/Minecraft-26.3-brightgreen?style=flat-square&logo=minetest)
 
 [![Maintainability](https://qlty.sh/gh/Kredwi/projects/CrashUtilsAddon/maintainability.png)](https://qlty.sh/gh/Kredwi/projects/CrashUtilsAddon)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/fadc800a852a485ba1846cffb56c2d38)](https://app.codacy.com/gh/Kredwi/CrashUtilsAddon/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
@@ -12,7 +12,7 @@ A meteor client addon
 ## Requirements
 
 - Java 25
-- Minecraft 26.1.2
+- Minecraft 26.3
 - Fabric API
 - Meteor Client
 

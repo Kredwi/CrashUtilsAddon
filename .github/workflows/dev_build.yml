@@ -27,7 +27,7 @@ jobs:
         uses: softprops/action-gh-release@v3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          tag_name: snapshot
+          tag_name: dev-${{ github.run_number }}-${{ github.sha }}
           name: Dev Build
           prerelease: true
           files: |
