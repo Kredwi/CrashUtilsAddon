@@ -62,7 +62,6 @@ public class CrashUtils extends MeteorAddon {
         Modules.get().add(new FAWEExploit());
 
         Modules.get().add(new GrimACExploit());
-        Modules.get().add(new ASCIExploit());
     }
 
     private void registerCommands() {

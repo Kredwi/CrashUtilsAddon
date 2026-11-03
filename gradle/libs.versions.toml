@@ -14,7 +14,7 @@ meteor = "26.3-SNAPSHOT"
 
 orbit = "0.2.4"
 
-fabric-api = "0.153.1+26.3"
+fabric-api = "0.160.6+26.3"
 
 # Mods
 
